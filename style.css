@@ -144,7 +144,7 @@ nav a:hover {
   border-radius: 20px;
   background: linear-gradient(135deg, var(--accent), #22d3ee);
   padding: 6px;
-  animation: float 4s ease-in-out infinite;
+  animation: float 2s ease-in-out infinite;
 }
 
 @keyframes float {
