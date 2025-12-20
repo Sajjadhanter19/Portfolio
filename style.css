@@ -17,7 +17,7 @@
 body {
   background: linear-gradient(135deg, #020617, #0f172a);
   color: var(--text);
-  animation: fadeIn 1.2s ease-in;
+  animation: fadeIn 1.3s ease-in;
 }
 
 @keyframes fadeIn {
