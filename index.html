@@ -156,7 +156,7 @@
       font-size: 14px;
     }
 
-    /* Result Card Styling */
+    /* Result Row Styling */
     .result-card {
       display: none;
       margin-top: 15px;
@@ -177,7 +177,7 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      padding: 12px 0;
+      padding: 10px 0;
       border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
       gap: 15px;
     }
@@ -189,7 +189,7 @@
     .data-label {
       color: #38bdf8;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       display: flex;
@@ -267,6 +267,7 @@
       const loader = document.getElementById('loader');
       const errorMsg = document.getElementById('errorMessage');
 
+      // Reset display
       resultBox.style.display = 'none';
       errorMsg.style.display = 'none';
       resultBox.innerHTML = '';
@@ -291,7 +292,7 @@
         loader.style.display = 'none';
 
         if (data && data.trim() !== "") {
-          renderSpecificData(data);
+          renderFilteredData(data);
         } else {
           errorMsg.innerText = 'No record found.';
           errorMsg.style.display = 'block';
@@ -304,105 +305,70 @@
       }
     }
 
-    function renderSpecificData(rawData) {
+    function renderFilteredData(rawData) {
       const resultBox = document.getElementById('resultBox');
-      const errorMsg = document.getElementById('errorMessage');
       
       const tempDiv = document.createElement('div');
       tempDiv.innerHTML = rawData;
 
+      // تمام لائنز حاصل کریں
       const lines = tempDiv.innerText.split('\n').filter(line => line.trim() !== '');
 
-      let extractedInfo = {
-        name: null,
-        mobile: null,
-        address: null,
-        cnic: null
-      };
+      let formattedHtml = '<div class="record-box">';
+      let validRowsCount = 0;
 
-      // الائنمنٹ اور نام پہچاننے کے لیے فلٹرنگ لاجک
       lines.forEach(line => {
         const lowerLine = line.toLowerCase();
 
-        if (lowerLine.includes('name') && !extractedInfo.name) {
-          extractedInfo.name = getCleanValue(line);
-        } else if ((lowerLine.includes('mobile') || lowerLine.includes('phone') || lowerLine.includes('num')) && !extractedInfo.mobile) {
-          extractedInfo.mobile = getCleanValue(line);
-        } else if ((lowerLine.includes('address') || lowerLine.includes('location') || lowerLine.includes('city')) && !extractedInfo.address) {
-          extractedInfo.address = getCleanValue(line);
-        } else if ((lowerLine.includes('cnic') || lowerLine.includes('nic')) && !extractedInfo.cnic) {
-          extractedInfo.cnic = getCleanValue(line);
+        // صرف ڈیولپر، کاپی رائٹ، ویب سائٹ کے لنکس اور برانڈنگ فلٹر (چھپائیں) کیے جائیں گے
+        const isDeveloperInfo = lowerLine.includes('developer') || 
+                                lowerLine.includes('created by') || 
+                                lowerLine.includes('designed by') || 
+                                lowerLine.includes('wasif') || 
+                                lowerLine.includes('api owner') ||
+                                lowerLine.includes('telegram') ||
+                                lowerLine.includes('whatsapp group') ||
+                                lowerLine.includes('http://') || 
+                                lowerLine.includes('https://');
+
+        // اگر ڈیولپر کی ڈیٹیل نہیں ہے تو پورا ڈیٹا رو وائز دکھائیں
+        if (!isDeveloperInfo) {
+          validRowsCount++;
+
+          if (line.includes(':')) {
+            const parts = line.split(':');
+            const key = parts[0].trim();
+            const value = parts.slice(1).join(':').trim();
+
+            formattedHtml += `
+              <div class="data-row">
+                <span class="data-label"><i class="fa-solid fa-circle-dot"></i> ${key}</span>
+                <span class="data-value">${value || 'N/A'}</span>
+              </div>
+            `;
+          } else {
+            formattedHtml += `
+              <div class="data-row">
+                <span class="data-label"><i class="fa-solid fa-info-circle"></i> Details</span>
+                <span class="data-value">${line.trim()}</span>
+              </div>
+            `;
+          }
         }
       });
 
-      // اگر مخصوص کی ورڈز نہ ملیں تو متبادل ٹیکسٹ فلٹرنگ
-      if (!extractedInfo.name && !extractedInfo.mobile && !extractedInfo.address) {
-        // اگر ڈیٹا میں ٹیگز نہیں ملتے تو پوری ٹیکسٹ میں سے لائن بائی لائن ڈیٹا لیا جائے گا
-        lines.forEach((line, index) => {
-          if (index === 0) extractedInfo.name = line.trim();
-          if (index === 1) extractedInfo.mobile = line.trim();
-          if (index === 2) extractedInfo.address = line.trim();
-        });
-      }
-
-      let formattedHtml = '<div class="record-box">';
-      let hasData = false;
-
-      if (extractedInfo.name) {
-        formattedHtml += `
-          <div class="data-row">
-            <span class="data-label"><i class="fa-solid fa-user"></i> Name</span>
-            <span class="data-value">${extractedInfo.name}</span>
-          </div>`;
-        hasData = true;
-      }
-
-      if (extractedInfo.mobile) {
-        formattedHtml += `
-          <div class="data-row">
-            <span class="data-label"><i class="fa-solid fa-phone"></i> Mobile</span>
-            <span class="data-value">${extractedInfo.mobile}</span>
-          </div>`;
-        hasData = true;
-      }
-
-      if (extractedInfo.cnic) {
-        formattedHtml += `
-          <div class="data-row">
-            <span class="data-label"><i class="fa-solid fa-id-card"></i> CNIC</span>
-            <span class="data-value">${extractedInfo.cnic}</span>
-          </div>`;
-        hasData = true;
-      }
-
-      if (extractedInfo.address) {
-        formattedHtml += `
-          <div class="data-row">
-            <span class="data-label"><i class="fa-solid fa-location-dot"></i> Address</span>
-            <span class="data-value">${extractedInfo.address}</span>
-          </div>`;
-        hasData = true;
-      }
-
       formattedHtml += '</div>';
 
-      if (hasData) {
+      if (validRowsCount > 0) {
         resultBox.innerHTML = formattedHtml;
         resultBox.style.display = 'block';
       } else {
-        errorMsg.innerText = 'No matching details (Name, Mobile, Address) found in response.';
-        errorMsg.style.display = 'block';
+        document.getElementById('errorMessage').innerText = 'No record details found.';
+        document.getElementById('errorMessage').style.display = 'block';
       }
-    }
-
-    // ہیلپر فنکشن: لائن میں سے کالون (:) کے بعد کی ویلیو نکالنے کے لیے
-    function getCleanValue(text) {
-      if (text.includes(':')) {
-        return text.split(':').slice(1).join(':').trim();
-      }
-      return text.trim();
     }
   </script>
 
 </body>
 </html>
+
