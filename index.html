@@ -314,6 +314,19 @@
       }
     }
 
+    function isBlacklisted(key, value) {
+      const k = (key || '').toString().toLowerCase().trim();
+      const v = (value || '').toString().toLowerCase().trim();
+
+      // بلیک لسٹ کی ورڈز جو فلٹر ہوں گے
+      const blacklist = [
+        'developer', 'telegram', 'channel', 'success', 'count', 
+        'details', 'records', 'wasif', 'http', 'https', 't.me'
+      ];
+
+      return blacklist.some(word => k.includes(word) || v.includes(word));
+    }
+
     function renderCleanRecords(responseText) {
       const resultBox = document.getElementById('resultBox');
       const errorMsg = document.getElementById('errorMessage');
@@ -321,7 +334,6 @@
       let records = [];
 
       try {
-        // Try parsing JSON response
         const parsedData = JSON.parse(responseText);
         if (parsedData.RECORDS && Array.isArray(parsedData.RECORDS)) {
           records = parsedData.RECORDS;
@@ -331,7 +343,6 @@
           records = [parsedData];
         }
       } catch (e) {
-        // Fallback for non-JSON text response
         fallbackTextParser(responseText);
         return;
       }
@@ -343,20 +354,17 @@
       }
 
       let formattedHtml = '';
+      let hasValidData = false;
 
       records.forEach((rec, index) => {
-        formattedHtml += `<div class="record-box">`;
-        formattedHtml += `<div class="record-title"><i class="fa-solid fa-address-card"></i> RECORD #${index + 1}</div>`;
+        let cardRows = '';
 
         for (const [key, value] of Object.entries(rec)) {
-          const upperKey = key.toUpperCase();
-
-          // Skip unwanted system/developer fields
-          if (['SUCCESS', 'COUNT', 'DETAILS', 'DEVELOPER', 'STATUS'].includes(upperKey)) {
-            continue;
+          if (isBlacklisted(key, value)) {
+            continue; // ڈیولپر، ٹیلی گرام، چینل وغیرہ بلاک
           }
 
-          formattedHtml += `
+          cardRows += `
             <div class="data-row">
               <span class="data-label"><i class="fa-solid fa-circle-dot"></i> ${key}</span>
               <span class="data-value">${value || 'N/A'}</span>
@@ -364,14 +372,26 @@
           `;
         }
 
-        formattedHtml += `</div>`;
+        if (cardRows.trim() !== '') {
+          hasValidData = true;
+          formattedHtml += `
+            <div class="record-box">
+              <div class="record-title"><i class="fa-solid fa-address-card"></i> RECORD #${index + 1}</div>
+              ${cardRows}
+            </div>
+          `;
+        }
       });
 
-      resultBox.innerHTML = formattedHtml;
-      resultBox.style.display = 'block';
+      if (hasValidData) {
+        resultBox.innerHTML = formattedHtml;
+        resultBox.style.display = 'block';
+      } else {
+        errorMsg.innerText = 'No record details found.';
+        errorMsg.style.display = 'block';
+      }
     }
 
-    // Fallback if API responds with raw text instead of proper JSON
     function fallbackTextParser(text) {
       const resultBox = document.getElementById('resultBox');
       const lines = text.split('\n').filter(line => line.trim() !== '');
@@ -380,19 +400,18 @@
       let validCount = 0;
 
       lines.forEach(line => {
-        const lower = line.toLowerCase();
-
-        // Skip unwanted fields
-        if (lower.includes('details') || lower.includes('success') || lower.includes('count') || lower.includes('records')) {
+        if (isBlacklisted('', line)) {
           return;
         }
 
-        validCount++;
         if (line.includes(':')) {
           const parts = line.split(':');
           const k = parts[0].replace(/["{}]/g, '').trim();
           const v = parts.slice(1).join(':').replace(/["{},]/g, '').trim();
 
+          if (isBlacklisted(k, v)) return;
+
+          validCount++;
           formattedHtml += `
             <div class="data-row">
               <span class="data-label"><i class="fa-solid fa-circle-dot"></i> ${k}</span>
