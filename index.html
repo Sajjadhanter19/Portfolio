@@ -1,74 +1,164 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portfolio</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-  
-  
+  <title>SIM Number Details Lookup</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f4f7f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      background: #ffffff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 480px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: #007bff;
+    }
+
+    button {
+      padding: 12px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .loader {
+      display: none;
+      text-align: center;
+      color: #007bff;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .result-card {
+      display: none;
+      background: #f9f9f9;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 15px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #333;
+      font-size: 14px;
+    }
+
+    .error {
+      color: #dc3545;
+      text-align: center;
+      display: none;
+      margin-top: 10px;
+    }
+  </style>
 </head>
-<body><header>
-  <h1>Portfolio.</h1>
-  <nav>
-    <a href="#">Home</a>
-    <a href="#">About</a>
-    <a href="#">Services</a>
-    <a href="#">Portfolio</a>
-    <a href="#">Contact</a>
-  </nav>
-</header><section class="hero" id="home">
-  <div class="hero-text">
-    <h2>Hello, It's Me<br><span>Sajjad Ali</span></h2>
-    <p>I am a Frontend Developer who builds clean, modern and responsive user interfaces.</p>
-    <div class="socials">
-      <a href="#" aria-label="LinkedIn">in</a>
-      <a href="#" aria-label="GitHub">gh</a>
-      <a href="#" aria-label="Twitter">tw</a>
+<body>
+
+  <div class="container">
+    <h2>SIM Tracker Details</h2>
+    
+    <div class="search-box">
+      <input type="text" id="phoneInput" placeholder="Enter Mobile or CNIC (e.g. 0300...)" />
+      <button onclick="fetchSimDetails()">Search</button>
     </div>
-  </div>
-  <div class="profile">
-    <img src="image.jpg" alt="profile">
-  </div>
-</section>
-<section id="Our services">
-  <h2 style="margin-bottom:30px">Our Services</h2>
-  <div class="services">
-    <div class="card"><h3>Web Development</h3><p>Modern and responsive websites.</p></div>
-    <div class="card"><h3>Graphic Design</h3><p>Creative UI/UX designs.</p></div>
-    <div class="card"><h3>Digital Marketing</h3><p>Grow your online presence.</p></div>
-  </div>
-</section>
-<section> 
-  <h2 style="margin-bottom:30px">Latest Projects</h2>
-  <div class="projects">
-    <div class="project"><h3>Project 1 – Modern Portfolio Website
 
-</h3><P>Tech Used</P>
-<P>HTML • CSS • Responsive Design</P>
-</div>
-    <div class="project"><h3>
-        Project 2 – Business Landing Page
-    </h3><P>Tech Used</P>
-<P>HTML • CSS • UI/UX Design</P></div>
-    <div class="project"><h3>Project 3 – Creative Web UI Design</h3><P>Tech Used</P>
-    <p>HTML • CSS • Animations</p></div>
+    <div class="loader" id="loader">Searching details...</div>
+    <div class="error" id="errorMessage"></div>
+    <div class="result-card" id="resultBox"></div>
   </div>
-</section>
-<section id="contact">
-  <h2 class="section-title">Contact Me</h2>
 
-  <form class="contact-form">
-    <input type="text" placeholder="Your Name" required>
-    <input type="email" placeholder="Your Email" required>
-    <input type="text" placeholder="Subject">
-    <textarea rows="5" placeholder="Your Message" required></textarea>
-    <button type="submit">Send Message</button>
-  </form>
-</section>
-<footer>
-  © 2025 Portfolio. All rights reserved.
-</footer>
-<script src="script.js"></script>
+  <script>
+    async function fetchSimDetails() {
+      const inputVal = document.getElementById('phoneInput').value.trim();
+      const resultBox = document.getElementById('resultBox');
+      const loader = document.getElementById('loader');
+      const errorMsg = document.getElementById('errorMessage');
+
+      // Reset previous display state
+      resultBox.style.display = 'none';
+      errorMsg.style.display = 'none';
+      resultBox.innerHTML = '';
+
+      if (!inputVal) {
+        errorMsg.innerText = 'Please enter a mobile number or CNIC.';
+        errorMsg.style.display = 'block';
+        return;
+      }
+
+      loader.style.display = 'block';
+
+      try {
+        const apiUrl = `https://wasifali.biz.id/public_apis/sim-info-api.php?search=${encodeURIComponent(inputVal)}`;
+        const response = await fetch(apiUrl);
+        
+        if (!response.ok) {
+          throw new Error('Server response error');
+        }
+
+        const data = await response.text();
+        loader.style.display = 'none';
+
+        if (data) {
+          resultBox.innerHTML = data;
+          resultBox.style.display = 'block';
+        } else {
+          errorMsg.innerText = 'No record found.';
+          errorMsg.style.display = 'block';
+        }
+
+      } catch (error) {
+        loader.style.display = 'none';
+        errorMsg.innerText = 'Failed to fetch data or CORS blocked by browser.';
+        errorMsg.style.display = 'block';
+      }
+    }
+  </script>
+
 </body>
 </html>
