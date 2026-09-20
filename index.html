@@ -276,7 +276,6 @@
       const loader = document.getElementById('loader');
       const errorMsg = document.getElementById('errorMessage');
 
-      // Reset UI
       resultBox.style.display = 'none';
       errorMsg.style.display = 'none';
       resultBox.innerHTML = '';
@@ -297,11 +296,11 @@
           throw new Error('Server response error');
         }
 
-        const responseText = await response.text();
+        const data = await response.json();
         loader.style.display = 'none';
 
-        if (responseText && responseText.trim() !== "") {
-          renderCleanRecords(responseText);
+        if (data && (data.RECORDS || Array.isArray(data) || typeof data === 'object')) {
+          renderRecords(data);
         } else {
           errorMsg.innerText = 'No record found.';
           errorMsg.style.display = 'block';
@@ -309,126 +308,71 @@
 
       } catch (error) {
         loader.style.display = 'none';
-        errorMsg.innerText = 'Failed to fetch data or CORS blocked by browser.';
+        errorMsg.innerText = 'Error loading data. Please check your network or API status.';
         errorMsg.style.display = 'block';
       }
     }
 
-    function isBlacklisted(key, value) {
-      const k = (key || '').toString().toLowerCase().trim();
-      const v = (value || '').toString().toLowerCase().trim();
+    // صرف ان مخصوص کیز (Keys) کی اجازت دیں جو سم کی معلومات ہیں
+    const allowedKeys = ['NAME', 'MOBILE', 'CNIC', 'ADDRESS', 'NETWORK'];
 
-      // بلیک لسٹ کی ورڈز جو فلٹر ہوں گے
-      const blacklist = [
-        'developer', 'telegram', 'channel', 'success', 'count', 
-        'details', 'records', 'wasif', 'http', 'https', 't.me'
-      ];
-
-      return blacklist.some(word => k.includes(word) || v.includes(word));
-    }
-
-    function renderCleanRecords(responseText) {
+    function renderRecords(data) {
       const resultBox = document.getElementById('resultBox');
       const errorMsg = document.getElementById('errorMessage');
 
       let records = [];
 
-      try {
-        const parsedData = JSON.parse(responseText);
-        if (parsedData.RECORDS && Array.isArray(parsedData.RECORDS)) {
-          records = parsedData.RECORDS;
-        } else if (Array.isArray(parsedData)) {
-          records = parsedData;
-        } else if (typeof parsedData === 'object') {
-          records = [parsedData];
-        }
-      } catch (e) {
-        fallbackTextParser(responseText);
-        return;
+      if (data.RECORDS && Array.isArray(data.RECORDS)) {
+        records = data.RECORDS;
+      } else if (Array.isArray(data)) {
+        records = data;
+      } else if (typeof data === 'object') {
+        records = [data];
       }
 
       if (records.length === 0) {
-        errorMsg.innerText = 'No record details found.';
+        errorMsg.innerText = 'No record found.';
         errorMsg.style.display = 'block';
         return;
       }
 
       let formattedHtml = '';
-      let hasValidData = false;
+      let recordCounter = 0;
 
-      records.forEach((rec, index) => {
+      records.forEach((rec) => {
         let cardRows = '';
 
         for (const [key, value] of Object.entries(rec)) {
-          if (isBlacklisted(key, value)) {
-            continue; // ڈیولپر، ٹیلی گرام، چینل وغیرہ بلاک
-          }
+          const upperKey = key.toUpperCase().trim();
 
-          cardRows += `
-            <div class="data-row">
-              <span class="data-label"><i class="fa-solid fa-circle-dot"></i> ${key}</span>
-              <span class="data-value">${value || 'N/A'}</span>
-            </div>
-          `;
+          // صرف Name, Mobile, CNIC, Address, Network والی فیلڈز ہی دکھائیں
+          if (allowedKeys.includes(upperKey)) {
+            cardRows += `
+              <div class="data-row">
+                <span class="data-label"><i class="fa-solid fa-circle-dot"></i> ${upperKey}</span>
+                <span class="data-value">${value || 'N/A'}</span>
+              </div>
+            `;
+          }
         }
 
         if (cardRows.trim() !== '') {
-          hasValidData = true;
+          recordCounter++;
           formattedHtml += `
             <div class="record-box">
-              <div class="record-title"><i class="fa-solid fa-address-card"></i> RECORD #${index + 1}</div>
+              <div class="record-title"><i class="fa-solid fa-address-card"></i> RECORD #${recordCounter}</div>
               ${cardRows}
             </div>
           `;
         }
       });
 
-      if (hasValidData) {
+      if (formattedHtml !== '') {
         resultBox.innerHTML = formattedHtml;
         resultBox.style.display = 'block';
       } else {
-        errorMsg.innerText = 'No record details found.';
+        errorMsg.innerText = 'No valid record details found.';
         errorMsg.style.display = 'block';
-      }
-    }
-
-    function fallbackTextParser(text) {
-      const resultBox = document.getElementById('resultBox');
-      const lines = text.split('\n').filter(line => line.trim() !== '');
-
-      let formattedHtml = '<div class="record-box">';
-      let validCount = 0;
-
-      lines.forEach(line => {
-        if (isBlacklisted('', line)) {
-          return;
-        }
-
-        if (line.includes(':')) {
-          const parts = line.split(':');
-          const k = parts[0].replace(/["{}]/g, '').trim();
-          const v = parts.slice(1).join(':').replace(/["{},]/g, '').trim();
-
-          if (isBlacklisted(k, v)) return;
-
-          validCount++;
-          formattedHtml += `
-            <div class="data-row">
-              <span class="data-label"><i class="fa-solid fa-circle-dot"></i> ${k}</span>
-              <span class="data-value">${v || 'N/A'}</span>
-            </div>
-          `;
-        }
-      });
-
-      formattedHtml += '</div>';
-
-      if (validCount > 0) {
-        resultBox.innerHTML = formattedHtml;
-        resultBox.style.display = 'block';
-      } else {
-        document.getElementById('errorMessage').innerText = 'No record details found.';
-        document.getElementById('errorMessage').style.display = 'block';
       }
     }
   </script>
