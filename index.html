@@ -1,381 +1,535 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="ur">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>سجاد بلوچ - SIM Details Lookup</title>
-  <!-- Google Fonts & FontAwesome Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
-
+  <title>Sajjad Baloch Finder</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #070b14; color: #e8f0ff; min-height: 100vh; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 20px 16px 40px; }
+    .hidden { display: none !important; }
 
-    body {
-      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
-      font-family: 'Poppins', 'Segoe UI', Tahoma, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      color: #fff;
+    .login-screen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
     }
-
-    .container {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 35px 25px;
-      width: 100%;
-      max-width: 520px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-      position: relative;
-      overflow: hidden;
+    .login-box {
+      width: 100%; max-width: 380px; background: #0f1629;
+      border: 1px solid rgba(0,229,255,0.2); border-radius: 18px; padding: 28px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
     }
-
-    .container::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 60%);
-      pointer-events: none;
+    .login-box h1 { text-align: center; font-size: 1.4rem; margin-bottom: 6px; }
+    .login-box .sub { text-align: center; color: #8b9bb8; font-size: 0.85rem; margin-bottom: 22px; }
+    .login-box label { display: block; font-size: 0.8rem; color: #8b9bb8; margin-bottom: 6px; }
+    .login-box input {
+      width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid rgba(0,229,255,0.2);
+      background: #0a101f; color: #fff; font-size: 1rem; margin-bottom: 14px; outline: none;
     }
-
-    .header {
-      text-align: center;
-      margin-bottom: 25px;
+    .login-box input:focus { border-color: #00e5ff; }
+    .login-box button {
+      width: 100%; padding: 13px; border: none; border-radius: 10px; font-weight: 600;
+      font-size: 1rem; cursor: pointer; background: linear-gradient(135deg, #00e5ff, #00b4d8); color: #001018;
     }
-
-    .header h2 {
-      font-family: 'Noto Nastaliq Urdu', serif;
-      font-size: 26px;
-      font-weight: 700;
-      background: linear-gradient(45deg, #38bdf8, #818cf8);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 5px;
-    }
-
-    .header p {
-      font-size: 13px;
-      letter-spacing: 1.5px;
-      color: #94a3b8;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    .search-box {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 20px;
-    }
-
-    .input-wrapper {
-      display: flex;
-      align-items: center;
-      background: rgba(15, 23, 42, 0.6);
-      border: 1.5px solid rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      padding: 5px 15px;
-      transition: all 0.3s ease;
-    }
-
-    .input-wrapper:focus-within {
-      border-color: #6366f1;
-      box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
-    }
-
-    .input-wrapper i {
-      color: #818cf8;
-      font-size: 18px;
-      margin-left: 10px;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: #fff;
-      font-size: 16px;
-      padding: 12px 5px;
-      direction: ltr;
-      text-align: left;
-    }
-
-    input[type="text"]::placeholder {
-      color: #64748b;
-      direction: rtl;
-      text-align: right;
-    }
-
-    button {
-      width: 100%;
-      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-      color: #fff;
-      border: none;
-      padding: 14px;
-      border-radius: 12px;
-      font-size: 16px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
-    }
-
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(124, 58, 237, 0.6);
-    }
-
-    button:active {
-      transform: translateY(0);
-    }
-
-    .loader {
+    .login-err {
+      background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3);
+      color: #fca5a5; padding: 10px 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 12px;
       display: none;
-      text-align: center;
-      color: #818cf8;
-      font-weight: 600;
-      margin: 15px 0;
-      font-size: 14px;
     }
 
-    /* Result Row Styling */
-    .result-card {
-      display: none;
-      margin-top: 15px;
-      direction: ltr;
-      text-align: left;
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-bottom: 16px; border-bottom: 1px solid rgba(0,229,255,0.15); margin-bottom: 22px;
+      flex-wrap: wrap; gap: 10px;
     }
-
-    .record-box {
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-icon {
+      width: 42px; height: 42px; border-radius: 12px;
+      background: linear-gradient(135deg, #00e5ff, #0077ff);
+      display: grid; place-items: center; font-weight: 700; color: #000;
     }
-
-    .record-title {
-      font-size: 13px;
-      font-weight: bold;
-      color: #818cf8;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 8px;
-      margin-bottom: 10px;
+    .logo h1 { font-size: 1.15rem; }
+    .logo span { font-size: 0.72rem; color: #8b9bb8; }
+    .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .user-chip {
+      font-size: 0.8rem; padding: 5px 12px; border-radius: 999px;
+      background: rgba(0,229,255,0.1); color: #00e5ff; border: 1px solid rgba(0,229,255,0.25);
     }
-
-    .data-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 8px 0;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
-      gap: 15px;
+    .btn-sm {
+      padding: 7px 14px; border-radius: 8px; border: 1px solid rgba(0,229,255,0.25);
+      background: transparent; color: #8b9bb8; font-size: 0.8rem; cursor: pointer;
     }
+    .btn-sm:hover { color: #00e5ff; border-color: #00e5ff; }
+    .btn-danger { border-color: rgba(239,68,68,0.4); color: #f87171; }
 
-    .data-row:last-child {
-      border-bottom: none;
+    h2 { text-align: center; font-size: 1.6rem; margin-bottom: 6px; }
+    .sub { text-align: center; color: #8b9bb8; margin-bottom: 20px; font-size: 0.9rem; }
+    .card {
+      background: #0f1629; border: 1px solid rgba(0,229,255,0.18);
+      border-radius: 16px; padding: 18px; margin-bottom: 18px;
     }
-
-    .data-label {
-      color: #38bdf8;
-      font-weight: 600;
-      font-size: 13px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      white-space: nowrap;
+    .row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .field {
+      flex: 1; min-width: 140px; padding: 12px 14px; border-radius: 10px;
+      border: 1px solid rgba(0,229,255,0.2); background: #0a101f; color: #fff;
+      font-size: 0.95rem; font-family: monospace; outline: none;
     }
-
-    .data-value {
-      color: #f1f5f9;
-      font-size: 14px;
-      font-weight: 500;
-      word-break: break-word;
-      text-align: right;
+    .field:focus { border-color: #00e5ff; }
+    .btn-go {
+      padding: 12px 18px; border-radius: 10px; border: none; font-weight: 600;
+      background: linear-gradient(135deg, #00e5ff, #00b4d8); color: #001018; cursor: pointer;
     }
-
-    .error {
-      color: #f87171;
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.2);
-      padding: 12px;
-      border-radius: 10px;
-      text-align: center;
-      display: none;
-      margin-top: 15px;
-      font-size: 14px;
+    .btn-go:disabled { opacity: 0.5; }
+    .btn-test {
+      padding: 12px 14px; border-radius: 10px; border: 1px solid rgba(0,229,255,0.2);
+      background: transparent; color: #8b9bb8; cursor: pointer; font-size: 0.9rem;
     }
-
-    .footer {
-      text-align: center;
-      margin-top: 25px;
-      padding-top: 15px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      font-size: 13px;
-      color: #94a3b8;
+    .hint { margin-top: 8px; font-size: 0.78rem; color: #8b9bb8; }
+    .loading { text-align: center; padding: 28px; color: #8b9bb8; }
+    .err {
+      background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3);
+      color: #fca5a5; padding: 12px 14px; border-radius: 10px;
     }
-
-    .footer span {
-      color: #38bdf8;
-      font-weight: 600;
+    .result {
+      background: #0f1629; border: 1px solid rgba(0,229,255,0.18);
+      border-radius: 14px; overflow: hidden; margin-bottom: 14px;
+    }
+    .result-top {
+      padding: 14px 16px; border-bottom: 1px solid rgba(0,229,255,0.12);
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
+      background: linear-gradient(90deg, rgba(0,229,255,0.1), transparent);
+    }
+    .result-top h3 { font-size: 1.1rem; }
+    .result-body { padding: 16px; }
+    .grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 10px; margin-bottom: 12px;
+    }
+    .item {
+      background: #0a101f; border-radius: 8px; padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    .item label {
+      display: block; font-size: 0.65rem; color: #8b9bb8;
+      text-transform: uppercase; margin-bottom: 3px;
+    }
+    .item .v { font-family: monospace; font-size: 0.88rem; word-break: break-all; }
+    .sec {
+      font-size: 0.72rem; color: #00e5ff; text-transform: uppercase;
+      margin: 14px 0 8px; font-weight: 600;
+    }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .chip {
+      background: rgba(0,229,255,0.12); border: 1px solid rgba(0,229,255,0.25);
+      color: #00e5ff; padding: 5px 10px; border-radius: 6px;
+      font-family: monospace; font-size: 0.82rem;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+    th { text-align: left; padding: 7px; color: #8b9bb8; border-bottom: 1px solid rgba(0,229,255,0.15); }
+    td { padding: 8px 7px; border-bottom: 1px solid rgba(255,255,255,0.04); font-family: monospace; }
+    .admin-form { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .admin-form .field { flex: 1; min-width: 120px; }
+    footer {
+      margin-top: 30px; text-align: center; color: #8b9bb8; font-size: 0.82rem;
+      padding-top: 16px; border-top: 1px solid rgba(0,229,255,0.12);
+    }
+    footer b { color: #00e5ff; }
+    @media (max-width: 500px) {
+      .row, .admin-form { flex-direction: column; }
+      button { width: 100%; }
     }
   </style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="header">
-      <h2>سجاد بلوچ - SIM Tracker</h2>
-      <p>SIM Details Lookup System</p>
-    </div>
-    
-    <div class="search-box">
-      <div class="input-wrapper">
-        <i class="fa-solid fa-phone"></i>
-        <input type="text" id="phoneInput" placeholder="Enter Mobile or CNIC (e.g. 0300...)" />
-      </div>
-      <button onclick="fetchSimDetails()">
-        <i class="fa-solid fa-magnifying-glass"></i> Search
-      </button>
-    </div>
-
-    <div class="loader" id="loader">Searching details...</div>
-    <div class="error" id="errorMessage"></div>
-    <div class="result-card" id="resultBox"></div>
-
-    <div class="footer">
-      Designed & Developed by: <span>سجاد بلوچ</span>
+  <div id="loginScreen" class="login-screen">
+    <div class="login-box">
+      <h1>Sajjad Baloch Finder</h1>
+      <p class="sub">Login to continue</p>
+      <div class="login-err" id="loginErr"></div>
+      <form id="loginForm">
+        <label>Username</label>
+        <input type="text" id="loginUser" placeholder="Username" autocomplete="username" required />
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password" required />
+        <button type="submit">Login</button>
+      </form>
     </div>
   </div>
 
-  <script>
-    async function fetchSimDetails() {
-      const inputVal = document.getElementById('phoneInput').value.trim();
-      const resultBox = document.getElementById('resultBox');
-      const loader = document.getElementById('loader');
-      const errorMsg = document.getElementById('errorMessage');
+  <div id="appScreen" class="wrap hidden">
+    <header>
+      <div class="logo">
+        <div class="logo-icon">SB</div>
+        <div>
+          <h1>Sajjad Baloch Finder</h1>
+          <span>Pak SIM • CNIC • Vehicle</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <span class="user-chip" id="currentUserLabel"></span>
+        <button class="btn-sm" id="adminBtn" type="button" style="display:none">Admin Panel</button>
+        <button class="btn-sm" id="searchViewBtn" type="button" style="display:none">Search</button>
+        <button class="btn-sm btn-danger" id="logoutBtn" type="button">Logout</button>
+      </div>
+    </header>
 
-      resultBox.style.display = 'none';
-      errorMsg.style.display = 'none';
-      resultBox.innerHTML = '';
+    <div id="searchView">
+      <h2>Ultimate Number Finder</h2>
+      <p class="sub">Phone / CNIC / Vehicle Number سے تلاش کریں</p>
+      <div class="card">
+        <div class="row">
+          <input class="field" id="q" type="text" placeholder="0300xxx | 35202xxx | SLK-0644" />
+          <button class="btn-test" id="testSim" type="button">Test SIM</button>
+          <button class="btn-test" id="testVeh" type="button">Test Vehicle</button>
+          <button class="btn-go" id="goBtn" type="button">Search</button>
+        </div>
+        <div class="hint">SIM: 3520212345671 &nbsp;|&nbsp; Vehicle: SLK-0644</div>
+      </div>
+      <div id="out"></div>
+    </div>
 
-      if (!inputVal) {
-        errorMsg.innerText = 'Please enter a mobile number or CNIC.';
-        errorMsg.style.display = 'block';
-        return;
-      }
+    <div id="adminView" class="hidden">
+      <h2>Admin Panel</h2>
+      <p class="sub">یوزرز کو Add / Remove کریں</p>
+      <div class="card">
+        <div class="sec" style="margin-top:0">نیا یوزر بنائیں</div>
+        <div class="admin-form">
+          <input class="field" type="text" id="newUser" placeholder="Username" />
+          <input class="field" type="text" id="newPass" placeholder="Password" />
+          <button class="btn-go" id="addUserBtn" type="button">Add User</button>
+        </div>
+        <div id="adminMsg" style="font-size:0.85rem;margin-bottom:10px;color:#22c55e"></div>
+        <div class="sec">موجودہ یوزرز</div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Username</th><th>Password</th><th>Created</th><th>Action</th></tr>
+            </thead>
+            <tbody id="usersList"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
 
-      loader.style.display = 'block';
+    <footer>Developed by <b>سجاد بلوچ (Sajjad Baloch)</b></footer>
+  </div>
 
-      try {
-        const apiUrl = `https://wasifali.biz.id/public_apis/sim-info-api.php?search=${encodeURIComponent(inputVal)}`;
-        const response = await fetch(apiUrl);
-        
-        if (!response.ok) {
-          throw new Error('Server response error');
-        }
+<script>
+(function () {
+  var ADMIN_USER = "admin";
+  var ADMIN_PASS = "admin123";
+  var API = "https://identra.janialexa610.workers.dev";
+  var KEY = "identra-client-key-2026";
 
-        const data = await response.json();
-        loader.style.display = 'none';
+  function getUsers() {
+    try { return JSON.parse(localStorage.getItem("sb_users") || "[]"); }
+    catch (e) { return []; }
+  }
+  function saveUsers(list) {
+    localStorage.setItem("sb_users", JSON.stringify(list));
+  }
+  function getSession() {
+    try { return JSON.parse(localStorage.getItem("sb_session") || "null"); }
+    catch (e) { return null; }
+  }
+  function setSession(obj) {
+    if (obj) localStorage.setItem("sb_session", JSON.stringify(obj));
+    else localStorage.removeItem("sb_session");
+  }
 
-        if (data && (data.RECORDS || Array.isArray(data) || typeof data === 'object')) {
-          renderRecords(data);
-        } else {
-          errorMsg.innerText = 'No record found.';
-          errorMsg.style.display = 'block';
-        }
+  function showErr(msg) {
+    var el = document.getElementById("loginErr");
+    el.textContent = msg;
+    el.style.display = "block";
+  }
 
-      } catch (error) {
-        loader.style.display = 'none';
-        errorMsg.innerText = 'Error loading data. Please check your network or API status.';
-        errorMsg.style.display = 'block';
+  function showLogin() {
+    document.getElementById("loginScreen").classList.remove("hidden");
+    document.getElementById("appScreen").classList.add("hidden");
+    document.getElementById("loginErr").style.display = "none";
+    document.getElementById("loginUser").value = "";
+    document.getElementById("loginPass").value = "";
+  }
+
+  function showApp(session) {
+    document.getElementById("loginScreen").classList.add("hidden");
+    document.getElementById("appScreen").classList.remove("hidden");
+    document.getElementById("currentUserLabel").textContent =
+      session.isAdmin ? ("Admin: " + session.username) : ("User: " + session.username);
+    document.getElementById("adminBtn").style.display = session.isAdmin ? "inline-block" : "none";
+    document.getElementById("searchViewBtn").style.display = "none";
+  }
+
+  function doLogin(e) {
+    if (e) e.preventDefault();
+    var u = (document.getElementById("loginUser").value || "").trim();
+    var p = document.getElementById("loginPass").value || "";
+
+    if (!u || !p) {
+      showErr("Username اور Password لکھیں");
+      return false;
+    }
+
+    if (u === ADMIN_USER && p === ADMIN_PASS) {
+      var adminSession = { username: u, isAdmin: true };
+      setSession(adminSession);
+      showApp(adminSession);
+      showAdminView();
+      return false;
+    }
+
+    var users = getUsers();
+    var found = null;
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].username === u && users[i].password === p) {
+        found = users[i];
+        break;
       }
     }
 
-    // صرف ان مخصوص کیز (Keys) کی اجازت دیں جو سم کی معلومات ہیں
-    const allowedKeys = ['NAME', 'MOBILE', 'CNIC', 'ADDRESS', 'NETWORK'];
+    if (found) {
+      var userSession = { username: u, isAdmin: false };
+      setSession(userSession);
+      showApp(userSession);
+      showSearchView();
+      return false;
+    }
 
-    function renderRecords(data) {
-      const resultBox = document.getElementById('resultBox');
-      const errorMsg = document.getElementById('errorMessage');
+    showErr("غلط username یا password");
+    return false;
+  }
 
-      let records = [];
+  function doLogout() {
+    setSession(null);
+    showLogin();
+  }
 
-      if (data.RECORDS && Array.isArray(data.RECORDS)) {
-        records = data.RECORDS;
-      } else if (Array.isArray(data)) {
-        records = data;
-      } else if (typeof data === 'object') {
-        records = [data];
-      }
+  function showSearchView() {
+    document.getElementById("searchView").classList.remove("hidden");
+    document.getElementById("adminView").classList.add("hidden");
+    document.getElementById("searchViewBtn").style.display = "none";
+    var s = getSession();
+    if (s && s.isAdmin) document.getElementById("adminBtn").style.display = "inline-block";
+  }
 
-      if (records.length === 0) {
-        errorMsg.innerText = 'No record found.';
-        errorMsg.style.display = 'block';
+  function showAdminView() {
+    document.getElementById("searchView").classList.add("hidden");
+    document.getElementById("adminView").classList.remove("hidden");
+    document.getElementById("adminBtn").style.display = "none";
+    document.getElementById("searchViewBtn").style.display = "inline-block";
+    renderUsersList();
+  }
+
+  function renderUsersList() {
+    var users = getUsers();
+    var tbody = document.getElementById("usersList");
+    if (!users.length) {
+      tbody.innerHTML = '<tr><td colspan="5" style="color:#8b9bb8">ابھی کوئی یوزر نہیں</td></tr>';
+      return;
+    }
+    var html = "";
+    for (var i = 0; i < users.length; i++) {
+      var u = users[i];
+      html += "<tr>" +
+        "<td>" + (i + 1) + "</td>" +
+        "<td>" + esc(u.username) + "</td>" +
+        "<td>" + esc(u.password) + "</td>" +
+        "<td>" + esc(u.created || "—") + "</td>" +
+        "<td><button type='button' class='btn-sm btn-danger' data-u='" + esc(u.username) + "'>Remove</button></td>" +
+        "</tr>";
+    }
+    tbody.innerHTML = html;
+    var btns = tbody.querySelectorAll("button[data-u]");
+    for (var j = 0; j < btns.length; j++) {
+      btns[j].onclick = (function (name) {
+        return function () { removeUser(name); };
+      })(btns[j].getAttribute("data-u"));
+    }
+  }
+
+  function addUser() {
+    var username = (document.getElementById("newUser").value || "").trim();
+    var password = (document.getElementById("newPass").value || "").trim();
+    var msg = document.getElementById("adminMsg");
+
+    if (!username || !password) {
+      msg.style.color = "#f87171";
+      msg.textContent = "Username اور Password دونوں لکھیں";
+      return;
+    }
+    if (username.toLowerCase() === ADMIN_USER) {
+      msg.style.color = "#f87171";
+      msg.textContent = "یہ نام استعمال نہیں کر سکتے";
+      return;
+    }
+
+    var users = getUsers();
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].username === username) {
+        msg.style.color = "#f87171";
+        msg.textContent = "یہ username پہلے سے موجود ہے";
         return;
       }
+    }
 
-      let formattedHtml = '';
-      let recordCounter = 0;
+    users.push({ username: username, password: password, created: new Date().toLocaleString() });
+    saveUsers(users);
+    document.getElementById("newUser").value = "";
+    document.getElementById("newPass").value = "";
+    msg.style.color = "#22c55e";
+    msg.textContent = "یوزر شامل ہو گیا: " + username;
+    renderUsersList();
+  }
 
-      records.forEach((rec) => {
-        let cardRows = '';
+  function removeUser(username) {
+    if (!confirm("یوزر ہٹائیں؟\n" + username)) return;
+    var users = getUsers();
+    var next = [];
+    for (var i = 0; i < users.length; i++) {
+      if (users[i].username !== username) next.push(users[i]);
+    }
+    saveUsers(next);
+    renderUsersList();
+    document.getElementById("adminMsg").style.color = "#22c55e";
+    document.getElementById("adminMsg").textContent = "ہٹا دیا: " + username;
+  }
 
-        for (const [key, value] of Object.entries(rec)) {
-          const upperKey = key.toUpperCase().trim();
+  function salt() {
+    var a = new Uint8Array(16);
+    crypto.getRandomValues(a);
+    var s = "";
+    for (var i = 0; i < a.length; i++) s += a[i].toString(16).padStart(2, "0");
+    return s + Date.now();
+  }
+  function clean(s) { return (s || "").trim().replace(/\s+/g, ""); }
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  function val(v) {
+    if (v === null || v === undefined || v === "") return "—";
+    return esc(String(v));
+  }
 
-          // صرف Name, Mobile, CNIC, Address, Network والی فیلڈز ہی دکھائیں
-          if (allowedKeys.includes(upperKey)) {
-            cardRows += `
-              <div class="data-row">
-                <span class="data-label"><i class="fa-solid fa-circle-dot"></i> ${upperKey}</span>
-                <span class="data-value">${value || 'N/A'}</span>
-              </div>
-            `;
-          }
-        }
+  function doSearch(raw) {
+    var q = clean(raw);
+    var outEl = document.getElementById("out");
+    if (!q) { outEl.innerHTML = '<div class="err">نمبر لکھیں</div>'; return; }
+    outEl.innerHTML = '<div class="loading">Searching...</div>';
+    document.getElementById("goBtn").disabled = true;
 
-        if (cardRows.trim() !== '') {
-          recordCounter++;
-          formattedHtml += `
-            <div class="record-box">
-              <div class="record-title"><i class="fa-solid fa-address-card"></i> RECORD #${recordCounter}</div>
-              ${cardRows}
-            </div>
-          `;
-        }
-      });
+    fetch(API + "/api/lookup?q=" + encodeURIComponent(q), {
+      method: "GET",
+      headers: {
+        "Accept": "application/json",
+        "x-api-key": KEY,
+        "x-device-salt": salt()
+      }
+    })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      if (data.error) {
+        outEl.innerHTML = '<div class="err">' + esc(data.error) + '</div>';
+        return;
+      }
+      var html = "";
+      if (data.citizen && data.citizen.success) html += renderCitizen(data);
+      if (data.vehicles && data.vehicles.length) {
+        for (var i = 0; i < data.vehicles.length; i++) html += renderVehicle(data.vehicles[i], i);
+      } else if (data.vehicleNotes && data.vehicleNotes.length) {
+        html += '<div class="result"><div class="result-top"><h3>Vehicle Notes</h3></div><div class="result-body" style="font-size:0.88rem;color:#8b9bb8">';
+        for (var n = 0; n < data.vehicleNotes.length; n++) html += "<div>• " + esc(data.vehicleNotes[n]) + "</div>";
+        html += '<div style="margin-top:8px;font-size:0.8rem">مکمل تفصیل کے لیے Registration Number لکھیں</div></div></div>';
+      }
+      if (!html) html = '<div class="err">کوئی ریکارڈ نہیں ملا</div>';
+      outEl.innerHTML = html;
+    })
+    .catch(function (e) {
+      outEl.innerHTML = '<div class="err">Error: ' + esc(e.message) + '</div>';
+    })
+    .finally(function () {
+      document.getElementById("goBtn").disabled = false;
+    });
+  }
 
-      if (formattedHtml !== '') {
-        resultBox.innerHTML = formattedHtml;
-        resultBox.style.display = 'block';
-      } else {
-        errorMsg.innerText = 'No valid record details found.';
-        errorMsg.style.display = 'block';
+  function renderCitizen(data) {
+    var c = data.citizen;
+    var numbers = c.numbers || [];
+    var sims = c.simRecords || [];
+    var html = '<div class="result"><div class="result-top"><h3>' + esc(c.name || "Unknown") + '</h3></div><div class="result-body"><div class="grid">';
+    html += '<div class="item"><label>CNIC</label><div class="v">' + val(c.cnic) + '</div></div>';
+    html += '<div class="item"><label>Address</label><div class="v">' + val(c.address) + '</div></div>';
+    html += '<div class="item"><label>Numbers</label><div class="v">' + numbers.length + '</div></div></div>';
+    if (numbers.length) {
+      html += '<div class="sec">Registered Numbers</div><div class="chips">';
+      for (var i = 0; i < numbers.length; i++) html += '<span class="chip">' + esc(numbers[i]) + '</span>';
+      html += '</div>';
+    }
+    if (sims.length) {
+      html += '<div class="sec">SIM Details</div><div style="overflow-x:auto"><table><thead><tr><th>Mobile</th><th>Name</th><th>CNIC</th><th>Address</th></tr></thead><tbody>';
+      for (var j = 0; j < sims.length; j++) {
+        var s = sims[j];
+        html += '<tr><td>' + val(s.mobile) + '</td><td>' + val(s.name) + '</td><td>' + val(s.cnic) + '</td><td>' + val(s.address) + '</td></tr>';
+      }
+      html += '</tbody></table></div>';
+    }
+    return html + '</div></div>';
+  }
+
+  function renderVehicle(v, index) {
+    var fields = [
+      ["Registration No", v.registrationNumber], ["Owner Name", v.ownerName],
+      ["Father Name", v.ownerFathersName], ["Owner CNIC", v.ownerCNIC],
+      ["Owner Address", v.ownerAddress], ["Owner Type", v.ownerType],
+      ["Manufacturer", v.manufacturerName], ["Model", v.modelName],
+      ["Model Year", v.modelYear || v.manufacturingYear], ["Vehicle Type", v.vehicleType],
+      ["Category", v.vehicleCategoryName || v._CATEGORY_], ["Color", v.color],
+      ["Engine No", v.engineNumber], ["Chassis No", v.chassisNumber],
+      ["Engine Capacity", v.engineCapacity ? v.engineCapacity + " CC" : null],
+      ["Fuel Type", v.fuelType], ["Seats", v.numberOfSeats], ["Tyres", v.numberofTyres],
+      ["Province", v.provinceName], ["District", v.districtName],
+      ["Division", v.divisionName], ["Branch", v.branchName],
+      ["CPLC Status", v.cplcStatus], ["Last Tax Paid", v.lastTaxPaid],
+      ["Reg. Updated", v.vehicleRegistrationUpdatedDate], ["Status", v.statusDescription]
+    ];
+    var items = "";
+    for (var i = 0; i < fields.length; i++) {
+      var label = fields[i][0], value = fields[i][1];
+      if (value !== null && value !== undefined && value !== "") {
+        items += '<div class="item"><label>' + esc(label) + '</label><div class="v">' + esc(String(value)) + '</div></div>';
       }
     }
-  </script>
+    return '<div class="result"><div class="result-top"><h3>Vehicle ' + esc(v.registrationNumber || ("#" + (index + 1))) +
+      '</h3></div><div class="result-body"><div class="grid">' + items + '</div></div></div>';
+  }
 
+  document.getElementById("loginForm").addEventListener("submit", doLogin);
+  document.getElementById("logoutBtn").onclick = doLogout;
+  document.getElementById("adminBtn").onclick = showAdminView;
+  document.getElementById("searchViewBtn").onclick = showSearchView;
+  document.getElementById("addUserBtn").onclick = addUser;
+  document.getElementById("goBtn").onclick = function () { doSearch(document.getElementById("q").value); };
+  document.getElementById("testSim").onclick = function () {
+    document.getElementById("q").value = "3520212345671";
+    doSearch("3520212345671");
+  };
+  document.getElementById("testVeh").onclick = function () {
+    document.getElementById("q").value = "SLK-0644";
+    doSearch("SLK-0644");
+  };
+  document.getElementById("q").onkeydown = function (e) {
+    if (e.key === "Enter") doSearch(document.getElementById("q").value);
+  };
+
+  var session = getSession();
+  if (session) {
+    showApp(session);
+    if (session.isAdmin) showAdminView();
+    else showSearchView();
+  } else {
+    showLogin();
+  }
+})();
+</script>
 </body>
 </html>
