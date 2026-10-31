@@ -95,11 +95,8 @@
       <div class="card">
         <div class="row">
           <input class="field" id="q" type="text" placeholder="0300xxx | 35202xxx | SLK-0004" />
-          <button class="btn-test" id="testSim" type="button">Test SIM</button>
-          <button class="btn-test" id="testVeh" type="button">Test Vehicle</button>
           <button class="btn-go" id="goBtn" type="button">Search</button>
         </div>
-        <div class="hint">SIM: 3520212345671 | Vehicle: SLK-0004</div>
       </div>
       <div id="out"></div>
     </div>
@@ -447,14 +444,6 @@
   document.getElementById("searchViewBtn").onclick = showSearchView;
   document.getElementById("addUserBtn").onclick = addUser;
   document.getElementById("goBtn").onclick = function(){ doSearch(document.getElementById("q").value); };
-  document.getElementById("testSim").onclick = function(){
-    document.getElementById("q").value = "3520212345671";
-    doSearch("3520212345671");
-  };
-  document.getElementById("testVeh").onclick = function(){
-    document.getElementById("q").value = "SLK-0004";
-    doSearch("SLK-0004");
-  };
   document.getElementById("q").onkeydown = function(e){
     if (e.key === "Enter") doSearch(document.getElementById("q").value);
   };
