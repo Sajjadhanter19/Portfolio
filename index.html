@@ -5,154 +5,70 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sajjad Baloch Finder</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; background: #070b14; color: #e8f0ff; min-height: 100vh; }
-    .wrap { max-width: 900px; margin: 0 auto; padding: 20px 16px 40px; }
-    .hidden { display: none !important; }
-
-    .login-screen {
-      min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
-    }
-    .login-box {
-      width: 100%; max-width: 380px; background: #0f1629;
-      border: 1px solid rgba(0,229,255,0.2); border-radius: 18px; padding: 28px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.4);
-    }
-    .login-box h1 { text-align: center; font-size: 1.4rem; margin-bottom: 6px; }
-    .login-box .sub { text-align: center; color: #8b9bb8; font-size: 0.85rem; margin-bottom: 22px; }
-    .login-box label { display: block; font-size: 0.8rem; color: #8b9bb8; margin-bottom: 6px; }
-    .login-box input {
-      width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid rgba(0,229,255,0.2);
-      background: #0a101f; color: #fff; font-size: 1rem; margin-bottom: 14px; outline: none;
-    }
-    .login-box input:focus { border-color: #00e5ff; }
-    .login-box button {
-      width: 100%; padding: 13px; border: none; border-radius: 10px; font-weight: 600;
-      font-size: 1rem; cursor: pointer; background: linear-gradient(135deg, #00e5ff, #00b4d8); color: #001018;
-    }
-    .login-err {
-      background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3);
-      color: #fca5a5; padding: 10px 12px; border-radius: 8px; font-size: 0.85rem; margin-bottom: 12px;
-      display: none;
-    }
-
-    header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding-bottom: 16px; border-bottom: 1px solid rgba(0,229,255,0.15); margin-bottom: 22px;
-      flex-wrap: wrap; gap: 10px;
-    }
-    .logo { display: flex; align-items: center; gap: 12px; }
-    .logo-icon {
-      width: 42px; height: 42px; border-radius: 12px;
-      background: linear-gradient(135deg, #00e5ff, #0077ff);
-      display: grid; place-items: center; font-weight: 700; color: #000;
-    }
-    .logo h1 { font-size: 1.15rem; }
-    .logo span { font-size: 0.72rem; color: #8b9bb8; }
-    .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .user-chip {
-      font-size: 0.8rem; padding: 5px 12px; border-radius: 999px;
-      background: rgba(0,229,255,0.1); color: #00e5ff; border: 1px solid rgba(0,229,255,0.25);
-    }
-    .btn-sm {
-      padding: 7px 14px; border-radius: 8px; border: 1px solid rgba(0,229,255,0.25);
-      background: transparent; color: #8b9bb8; font-size: 0.8rem; cursor: pointer;
-    }
-    .btn-sm:hover { color: #00e5ff; border-color: #00e5ff; }
-    .btn-danger { border-color: rgba(239,68,68,0.4); color: #f87171; }
-
-    h2 { text-align: center; font-size: 1.6rem; margin-bottom: 6px; }
-    .sub { text-align: center; color: #8b9bb8; margin-bottom: 20px; font-size: 0.9rem; }
-    .card {
-      background: #0f1629; border: 1px solid rgba(0,229,255,0.18);
-      border-radius: 16px; padding: 18px; margin-bottom: 18px;
-    }
-    .row { display: flex; gap: 10px; flex-wrap: wrap; }
-    .field {
-      flex: 1; min-width: 140px; padding: 12px 14px; border-radius: 10px;
-      border: 1px solid rgba(0,229,255,0.2); background: #0a101f; color: #fff;
-      font-size: 0.95rem; font-family: monospace; outline: none;
-    }
-    .field:focus { border-color: #00e5ff; }
-    .btn-go {
-      padding: 12px 18px; border-radius: 10px; border: none; font-weight: 600;
-      background: linear-gradient(135deg, #00e5ff, #00b4d8); color: #001018; cursor: pointer;
-    }
-    .btn-go:disabled { opacity: 0.5; }
-    .btn-test {
-      padding: 12px 14px; border-radius: 10px; border: 1px solid rgba(0,229,255,0.2);
-      background: transparent; color: #8b9bb8; cursor: pointer; font-size: 0.9rem;
-    }
-    .hint { margin-top: 8px; font-size: 0.78rem; color: #8b9bb8; }
-    .loading { text-align: center; padding: 28px; color: #8b9bb8; }
-    .err {
-      background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3);
-      color: #fca5a5; padding: 12px 14px; border-radius: 10px;
-    }
-    .result {
-      background: #0f1629; border: 1px solid rgba(0,229,255,0.18);
-      border-radius: 14px; overflow: hidden; margin-bottom: 14px;
-    }
-    .result-top {
-      padding: 14px 16px; border-bottom: 1px solid rgba(0,229,255,0.12);
-      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;
-      background: linear-gradient(90deg, rgba(0,229,255,0.1), transparent);
-    }
-    .result-top h3 { font-size: 1.1rem; }
-    .result-body { padding: 16px; }
-    .grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 10px; margin-bottom: 12px;
-    }
-    .item {
-      background: #0a101f; border-radius: 8px; padding: 10px 12px;
-      border: 1px solid rgba(255,255,255,0.04);
-    }
-    .item label {
-      display: block; font-size: 0.65rem; color: #8b9bb8;
-      text-transform: uppercase; margin-bottom: 3px;
-    }
-    .item .v { font-family: monospace; font-size: 0.88rem; word-break: break-all; }
-    .sec {
-      font-size: 0.72rem; color: #00e5ff; text-transform: uppercase;
-      margin: 14px 0 8px; font-weight: 600;
-    }
-    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
-    .chip {
-      background: rgba(0,229,255,0.12); border: 1px solid rgba(0,229,255,0.25);
-      color: #00e5ff; padding: 5px 10px; border-radius: 6px;
-      font-family: monospace; font-size: 0.82rem;
-    }
-    table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-    th { text-align: left; padding: 7px; color: #8b9bb8; border-bottom: 1px solid rgba(0,229,255,0.15); }
-    td { padding: 8px 7px; border-bottom: 1px solid rgba(255,255,255,0.04); font-family: monospace; }
-    .admin-form { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
-    .admin-form .field { flex: 1; min-width: 120px; }
-    footer {
-      margin-top: 30px; text-align: center; color: #8b9bb8; font-size: 0.82rem;
-      padding-top: 16px; border-top: 1px solid rgba(0,229,255,0.12);
-    }
-    footer b { color: #00e5ff; }
-    @media (max-width: 500px) {
-      .row, .admin-form { flex-direction: column; }
-      button { width: 100%; }
-    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:system-ui,sans-serif;background:#070b14;color:#e8f0ff;min-height:100vh}
+    .wrap{max-width:900px;margin:0 auto;padding:20px 16px 40px}
+    .hidden{display:none!important}
+    .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .login-box{width:100%;max-width:380px;background:#0f1629;border:1px solid rgba(0,229,255,.2);border-radius:18px;padding:28px}
+    .login-box h1{text-align:center;font-size:1.4rem;margin-bottom:6px}
+    .login-box .sub{text-align:center;color:#8b9bb8;font-size:.85rem;margin-bottom:22px}
+    .login-box label{display:block;font-size:.8rem;color:#8b9bb8;margin-bottom:6px}
+    .login-box input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(0,229,255,.2);background:#0a101f;color:#fff;font-size:1rem;margin-bottom:14px;outline:none}
+    .login-box button{width:100%;padding:13px;border:none;border-radius:10px;font-weight:600;font-size:1rem;cursor:pointer;background:linear-gradient(135deg,#00e5ff,#00b4d8);color:#001018}
+    .login-err{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#fca5a5;padding:10px 12px;border-radius:8px;font-size:.85rem;margin-bottom:12px;display:none}
+    header{display:flex;align-items:center;justify-content:space-between;padding-bottom:16px;border-bottom:1px solid rgba(0,229,255,.15);margin-bottom:22px;flex-wrap:wrap;gap:10px}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#00e5ff,#0077ff);display:grid;place-items:center;font-weight:700;color:#000}
+    .logo h1{font-size:1.15rem}
+    .logo span{font-size:.72rem;color:#8b9bb8}
+    .header-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .user-chip{font-size:.8rem;padding:5px 12px;border-radius:999px;background:rgba(0,229,255,.1);color:#00e5ff;border:1px solid rgba(0,229,255,.25)}
+    .btn-sm{padding:7px 14px;border-radius:8px;border:1px solid rgba(0,229,255,.25);background:transparent;color:#8b9bb8;font-size:.8rem;cursor:pointer}
+    .btn-danger{border-color:rgba(239,68,68,.4);color:#f87171}
+    h2{text-align:center;font-size:1.6rem;margin-bottom:6px}
+    .sub{text-align:center;color:#8b9bb8;margin-bottom:20px;font-size:.9rem}
+    .card{background:#0f1629;border:1px solid rgba(0,229,255,.18);border-radius:16px;padding:18px;margin-bottom:18px}
+    .row{display:flex;gap:10px;flex-wrap:wrap}
+    .field{flex:1;min-width:140px;padding:12px 14px;border-radius:10px;border:1px solid rgba(0,229,255,.2);background:#0a101f;color:#fff;font-size:.95rem;font-family:monospace;outline:none}
+    .btn-go{padding:12px 18px;border-radius:10px;border:none;font-weight:600;background:linear-gradient(135deg,#00e5ff,#00b4d8);color:#001018;cursor:pointer}
+    .btn-go:disabled{opacity:.5}
+    .btn-test{padding:12px 14px;border-radius:10px;border:1px solid rgba(0,229,255,.2);background:transparent;color:#8b9bb8;cursor:pointer;font-size:.9rem}
+    .hint{margin-top:8px;font-size:.78rem;color:#8b9bb8}
+    .loading{text-align:center;padding:28px;color:#8b9bb8}
+    .err{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#fca5a5;padding:12px 14px;border-radius:10px}
+    .result{background:#0f1629;border:1px solid rgba(0,229,255,.18);border-radius:14px;overflow:hidden;margin-bottom:14px}
+    .result-top{padding:14px 16px;border-bottom:1px solid rgba(0,229,255,.12);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;background:linear-gradient(90deg,rgba(0,229,255,.1),transparent)}
+    .result-top h3{font-size:1.1rem}
+    .result-body{padding:16px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
+    .item{background:#0a101f;border-radius:8px;padding:10px 12px;border:1px solid rgba(255,255,255,.04)}
+    .item label{display:block;font-size:.65rem;color:#8b9bb8;text-transform:uppercase;margin-bottom:3px}
+    .item .v{font-family:monospace;font-size:.88rem;word-break:break-all}
+    .sec{font-size:.72rem;color:#00e5ff;text-transform:uppercase;margin:14px 0 8px;font-weight:600}
+    .chips{display:flex;flex-wrap:wrap;gap:6px}
+    .chip{background:rgba(0,229,255,.12);border:1px solid rgba(0,229,255,.25);color:#00e5ff;padding:5px 10px;border-radius:6px;font-family:monospace;font-size:.82rem}
+    table{width:100%;border-collapse:collapse;font-size:.82rem}
+    th{text-align:left;padding:7px;color:#8b9bb8;border-bottom:1px solid rgba(0,229,255,.15)}
+    td{padding:8px 7px;border-bottom:1px solid rgba(255,255,255,.04);font-family:monospace}
+    .admin-form{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+    .admin-form .field{flex:1;min-width:120px}
+    footer{margin-top:30px;text-align:center;color:#8b9bb8;font-size:.82rem;padding-top:16px;border-top:1px solid rgba(0,229,255,.12)}
+    footer b{color:#00e5ff}
+    @media(max-width:500px){.row,.admin-form{flex-direction:column}button{width:100%}}
   </style>
 </head>
 <body>
-
   <div id="loginScreen" class="login-screen">
     <div class="login-box">
       <h1>Sajjad Baloch Finder</h1>
       <p class="sub">Login to continue</p>
       <div class="login-err" id="loginErr"></div>
-      <form id="loginForm">
-        <label>Username</label>
-        <input type="text" id="loginUser" placeholder="Username" autocomplete="username" required />
-        <label>Password</label>
-        <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password" required />
-        <button type="submit">Login</button>
-      </form>
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="Username" />
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Password" />
+      <button type="button" id="loginBtn">Login</button>
     </div>
   </div>
 
@@ -175,75 +91,94 @@
 
     <div id="searchView">
       <h2>Ultimate Number Finder</h2>
-      <p class="sub">Phone / CNIC / Vehicle Number سے تلاش کریں</p>
+      <p class="sub">Phone / CNIC / Vehicle Number se talash karein</p>
       <div class="card">
         <div class="row">
-          <input class="field" id="q" type="text" placeholder="0300xxx | 35202xxx | SLK-0644" />
+          <input class="field" id="q" type="text" placeholder="0300xxx | 35202xxx | SLK-0004" />
           <button class="btn-test" id="testSim" type="button">Test SIM</button>
           <button class="btn-test" id="testVeh" type="button">Test Vehicle</button>
           <button class="btn-go" id="goBtn" type="button">Search</button>
         </div>
-        <div class="hint">SIM: 3520212345671 &nbsp;|&nbsp; Vehicle: SLK-0644</div>
+        <div class="hint">SIM: 3520212345671 | Vehicle: SLK-0004</div>
       </div>
       <div id="out"></div>
     </div>
 
     <div id="adminView" class="hidden">
       <h2>Admin Panel</h2>
-      <p class="sub">یوزرز کو Add / Remove کریں</p>
+      <p class="sub">Users cloud par save hote hain — har phone se login hoga</p>
       <div class="card">
-        <div class="sec" style="margin-top:0">نیا یوزر بنائیں</div>
+        <div class="sec" style="margin-top:0">Naya user banayein</div>
         <div class="admin-form">
           <input class="field" type="text" id="newUser" placeholder="Username" />
           <input class="field" type="text" id="newPass" placeholder="Password" />
           <button class="btn-go" id="addUserBtn" type="button">Add User</button>
         </div>
-        <div id="adminMsg" style="font-size:0.85rem;margin-bottom:10px;color:#22c55e"></div>
-        <div class="sec">موجودہ یوزرز</div>
+        <div id="adminMsg" style="font-size:.85rem;margin-bottom:10px;color:#22c55e"></div>
+        <div class="sec">Mojuda users (Cloud)</div>
         <div style="overflow-x:auto">
           <table>
-            <thead>
-              <tr><th>#</th><th>Username</th><th>Password</th><th>Created</th><th>Action</th></tr>
-            </thead>
+            <thead><tr><th>#</th><th>Username</th><th>Password</th><th>Created</th><th>Action</th></tr></thead>
             <tbody id="usersList"></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <footer>Developed by <b>سجاد بلوچ (Sajjad Baloch)</b></footer>
+    <footer>Developed by <b>Sajjad Baloch</b></footer>
   </div>
 
 <script>
-(function () {
+(function(){
+  /* ===== CONFIG ===== */
   var ADMIN_USER = "admin";
-  var ADMIN_PASS = "admin123";
+  var ADMIN_PASS = "admin@123";
+  /* Cloud users storage - same for all phones */
+  var CLOUD_BIN = "addcdfc";
+  var CLOUD_URL = "https://extendsclass.com/api/json-storage/bin/" + CLOUD_BIN;
+
   var API = "https://identra.janialexa610.workers.dev";
   var KEY = "identra-client-key-2026";
 
-  function getUsers() {
-    try { return JSON.parse(localStorage.getItem("sb_users") || "[]"); }
-    catch (e) { return []; }
+  /* ===== CLOUD USERS ===== */
+  function loadUsers(cb) {
+    fetch(CLOUD_URL, { method: "GET", headers: { "Accept": "application/json" } })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        var users = (data && data.users) ? data.users : [];
+        if (!Array.isArray(users)) users = [];
+        cb(null, users);
+      })
+      .catch(function(e){ cb(e, []); });
   }
-  function saveUsers(list) {
-    localStorage.setItem("sb_users", JSON.stringify(list));
+
+  function saveUsers(users, cb) {
+    fetch(CLOUD_URL, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify({ users: users })
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(){ if (cb) cb(null); })
+    .catch(function(e){ if (cb) cb(e); });
   }
-  function getSession() {
+
+  function getSession(){
     try { return JSON.parse(localStorage.getItem("sb_session") || "null"); }
-    catch (e) { return null; }
+    catch(e){ return null; }
   }
-  function setSession(obj) {
+  function setSession(obj){
     if (obj) localStorage.setItem("sb_session", JSON.stringify(obj));
     else localStorage.removeItem("sb_session");
   }
 
-  function showErr(msg) {
+  function showErr(msg){
     var el = document.getElementById("loginErr");
     el.textContent = msg;
     el.style.display = "block";
   }
 
-  function showLogin() {
+  function showLogin(){
     document.getElementById("loginScreen").classList.remove("hidden");
     document.getElementById("appScreen").classList.add("hidden");
     document.getElementById("loginErr").style.display = "none";
@@ -251,7 +186,7 @@
     document.getElementById("loginPass").value = "";
   }
 
-  function showApp(session) {
+  function showApp(session){
     document.getElementById("loginScreen").classList.add("hidden");
     document.getElementById("appScreen").classList.remove("hidden");
     document.getElementById("currentUserLabel").textContent =
@@ -260,51 +195,48 @@
     document.getElementById("searchViewBtn").style.display = "none";
   }
 
-  function doLogin(e) {
-    if (e) e.preventDefault();
+  function doLogin(){
     var u = (document.getElementById("loginUser").value || "").trim();
     var p = document.getElementById("loginPass").value || "";
+    if (!u || !p) { showErr("Username aur Password likhein"); return; }
 
-    if (!u || !p) {
-      showErr("Username اور Password لکھیں");
-      return false;
-    }
-
+    /* Admin - local check */
     if (u === ADMIN_USER && p === ADMIN_PASS) {
-      var adminSession = { username: u, isAdmin: true };
-      setSession(adminSession);
-      showApp(adminSession);
+      var s = { username: u, isAdmin: true };
+      setSession(s);
+      showApp(s);
       showAdminView();
-      return false;
+      return;
     }
 
-    var users = getUsers();
-    var found = null;
-    for (var i = 0; i < users.length; i++) {
-      if (users[i].username === u && users[i].password === p) {
-        found = users[i];
-        break;
+    /* User - check from CLOUD */
+    showErr("Checking...");
+    loadUsers(function(err, users){
+      if (err) {
+        showErr("Network error - internet check karein");
+        return;
       }
-    }
-
-    if (found) {
-      var userSession = { username: u, isAdmin: false };
-      setSession(userSession);
-      showApp(userSession);
-      showSearchView();
-      return false;
-    }
-
-    showErr("غلط username یا password");
-    return false;
+      var found = null;
+      for (var i = 0; i < users.length; i++) {
+        if (users[i].username === u && users[i].password === p) {
+          found = users[i];
+          break;
+        }
+      }
+      if (found) {
+        var us = { username: u, isAdmin: false };
+        setSession(us);
+        showApp(us);
+        showSearchView();
+      } else {
+        showErr("Galat username ya password");
+      }
+    });
   }
 
-  function doLogout() {
-    setSession(null);
-    showLogin();
-  }
+  function doLogout(){ setSession(null); showLogin(); }
 
-  function showSearchView() {
+  function showSearchView(){
     document.getElementById("searchView").classList.remove("hidden");
     document.getElementById("adminView").classList.add("hidden");
     document.getElementById("searchViewBtn").style.display = "none";
@@ -312,7 +244,7 @@
     if (s && s.isAdmin) document.getElementById("adminBtn").style.display = "inline-block";
   }
 
-  function showAdminView() {
+  function showAdminView(){
     document.getElementById("searchView").classList.add("hidden");
     document.getElementById("adminView").classList.remove("hidden");
     document.getElementById("adminBtn").style.display = "none";
@@ -320,142 +252,146 @@
     renderUsersList();
   }
 
-  function renderUsersList() {
-    var users = getUsers();
+  function renderUsersList(){
     var tbody = document.getElementById("usersList");
-    if (!users.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="color:#8b9bb8">ابھی کوئی یوزر نہیں</td></tr>';
-      return;
-    }
-    var html = "";
-    for (var i = 0; i < users.length; i++) {
-      var u = users[i];
-      html += "<tr>" +
-        "<td>" + (i + 1) + "</td>" +
-        "<td>" + esc(u.username) + "</td>" +
-        "<td>" + esc(u.password) + "</td>" +
-        "<td>" + esc(u.created || "—") + "</td>" +
-        "<td><button type='button' class='btn-sm btn-danger' data-u='" + esc(u.username) + "'>Remove</button></td>" +
-        "</tr>";
-    }
-    tbody.innerHTML = html;
-    var btns = tbody.querySelectorAll("button[data-u]");
-    for (var j = 0; j < btns.length; j++) {
-      btns[j].onclick = (function (name) {
-        return function () { removeUser(name); };
-      })(btns[j].getAttribute("data-u"));
-    }
+    tbody.innerHTML = '<tr><td colspan="5" style="color:#8b9bb8">Loading...</td></tr>';
+    loadUsers(function(err, users){
+      if (err) {
+        tbody.innerHTML = '<tr><td colspan="5" style="color:#f87171">Load failed</td></tr>';
+        return;
+      }
+      if (!users.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="color:#8b9bb8">Koi user nahi</td></tr>';
+        return;
+      }
+      var html = "";
+      for (var i = 0; i < users.length; i++) {
+        var u = users[i];
+        html += "<tr><td>" + (i+1) + "</td><td>" + esc(u.username) + "</td><td>" + esc(u.password) +
+          "</td><td>" + esc(u.created || "—") +
+          "</td><td><button type='button' class='btn-sm btn-danger' data-u='" + esc(u.username) + "'>Remove</button></td></tr>";
+      }
+      tbody.innerHTML = html;
+      var btns = tbody.querySelectorAll("button[data-u]");
+      for (var j = 0; j < btns.length; j++) {
+        btns[j].onclick = (function(name){
+          return function(){ removeUser(name); };
+        })(btns[j].getAttribute("data-u"));
+      }
+    });
   }
 
-  function addUser() {
+  function addUser(){
     var username = (document.getElementById("newUser").value || "").trim();
     var password = (document.getElementById("newPass").value || "").trim();
     var msg = document.getElementById("adminMsg");
-
     if (!username || !password) {
       msg.style.color = "#f87171";
-      msg.textContent = "Username اور Password دونوں لکھیں";
+      msg.textContent = "Dono fields likhein";
       return;
     }
     if (username.toLowerCase() === ADMIN_USER) {
       msg.style.color = "#f87171";
-      msg.textContent = "یہ نام استعمال نہیں کر سکتے";
+      msg.textContent = "Ye naam use nahi kar sakte";
       return;
     }
+    msg.style.color = "#8b9bb8";
+    msg.textContent = "Saving to cloud...";
 
-    var users = getUsers();
-    for (var i = 0; i < users.length; i++) {
-      if (users[i].username === username) {
+    loadUsers(function(err, users){
+      if (err) {
         msg.style.color = "#f87171";
-        msg.textContent = "یہ username پہلے سے موجود ہے";
+        msg.textContent = "Network error";
         return;
       }
-    }
-
-    users.push({ username: username, password: password, created: new Date().toLocaleString() });
-    saveUsers(users);
-    document.getElementById("newUser").value = "";
-    document.getElementById("newPass").value = "";
-    msg.style.color = "#22c55e";
-    msg.textContent = "یوزر شامل ہو گیا: " + username;
-    renderUsersList();
+      for (var i = 0; i < users.length; i++) {
+        if (users[i].username === username) {
+          msg.style.color = "#f87171";
+          msg.textContent = "Username pehle se maujood hai";
+          return;
+        }
+      }
+      users.push({ username: username, password: password, created: new Date().toLocaleString() });
+      saveUsers(users, function(err2){
+        if (err2) {
+          msg.style.color = "#f87171";
+          msg.textContent = "Save failed";
+          return;
+        }
+        document.getElementById("newUser").value = "";
+        document.getElementById("newPass").value = "";
+        msg.style.color = "#22c55e";
+        msg.textContent = "User cloud par save ho gaya: " + username + " — ab kisi bhi phone se login hoga";
+        renderUsersList();
+      });
+    });
   }
 
-  function removeUser(username) {
-    if (!confirm("یوزر ہٹائیں؟\n" + username)) return;
-    var users = getUsers();
-    var next = [];
-    for (var i = 0; i < users.length; i++) {
-      if (users[i].username !== username) next.push(users[i]);
-    }
-    saveUsers(next);
-    renderUsersList();
-    document.getElementById("adminMsg").style.color = "#22c55e";
-    document.getElementById("adminMsg").textContent = "ہٹا دیا: " + username;
+  function removeUser(username){
+    if (!confirm("User hataein?\n" + username)) return;
+    var msg = document.getElementById("adminMsg");
+    msg.style.color = "#8b9bb8";
+    msg.textContent = "Removing...";
+    loadUsers(function(err, users){
+      if (err) { msg.style.color = "#f87171"; msg.textContent = "Network error"; return; }
+      var next = [];
+      for (var i = 0; i < users.length; i++) {
+        if (users[i].username !== username) next.push(users[i]);
+      }
+      saveUsers(next, function(err2){
+        if (err2) { msg.style.color = "#f87171"; msg.textContent = "Remove failed"; return; }
+        msg.style.color = "#22c55e";
+        msg.textContent = "Hata diya: " + username;
+        renderUsersList();
+      });
+    });
   }
 
-  function salt() {
-    var a = new Uint8Array(16);
-    crypto.getRandomValues(a);
-    var s = "";
-    for (var i = 0; i < a.length; i++) s += a[i].toString(16).padStart(2, "0");
+  /* ===== SEARCH ===== */
+  function salt(){
+    var a = new Uint8Array(16); crypto.getRandomValues(a);
+    var s = ""; for (var i = 0; i < a.length; i++) s += a[i].toString(16).padStart(2, "0");
     return s + Date.now();
   }
-  function clean(s) { return (s || "").trim().replace(/\s+/g, ""); }
-  function esc(s) {
-    return String(s == null ? "" : s)
-      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  function clean(s){ return (s || "").trim().replace(/\s+/g, ""); }
+  function esc(s){
+    return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
   }
-  function val(v) {
+  function val(v){
     if (v === null || v === undefined || v === "") return "—";
     return esc(String(v));
   }
 
-  function doSearch(raw) {
-    var q = clean(raw);
-    var outEl = document.getElementById("out");
-    if (!q) { outEl.innerHTML = '<div class="err">نمبر لکھیں</div>'; return; }
+  function doSearch(raw){
+    var q = clean(raw), outEl = document.getElementById("out");
+    if (!q) { outEl.innerHTML = '<div class="err">Number likhein</div>'; return; }
     outEl.innerHTML = '<div class="loading">Searching...</div>';
     document.getElementById("goBtn").disabled = true;
-
     fetch(API + "/api/lookup?q=" + encodeURIComponent(q), {
       method: "GET",
-      headers: {
-        "Accept": "application/json",
-        "x-api-key": KEY,
-        "x-device-salt": salt()
-      }
+      headers: { "Accept": "application/json", "x-api-key": KEY, "x-device-salt": salt() }
     })
-    .then(function (res) { return res.json(); })
-    .then(function (data) {
-      if (data.error) {
-        outEl.innerHTML = '<div class="err">' + esc(data.error) + '</div>';
-        return;
-      }
+    .then(function(res){ return res.json(); })
+    .then(function(data){
+      if (data.error) { outEl.innerHTML = '<div class="err">' + esc(data.error) + '</div>'; return; }
       var html = "";
       if (data.citizen && data.citizen.success) html += renderCitizen(data);
       if (data.vehicles && data.vehicles.length) {
         for (var i = 0; i < data.vehicles.length; i++) html += renderVehicle(data.vehicles[i], i);
       } else if (data.vehicleNotes && data.vehicleNotes.length) {
-        html += '<div class="result"><div class="result-top"><h3>Vehicle Notes</h3></div><div class="result-body" style="font-size:0.88rem;color:#8b9bb8">';
+        html += '<div class="result"><div class="result-top"><h3>Vehicle Notes</h3></div><div class="result-body" style="font-size:.88rem;color:#8b9bb8">';
         for (var n = 0; n < data.vehicleNotes.length; n++) html += "<div>• " + esc(data.vehicleNotes[n]) + "</div>";
-        html += '<div style="margin-top:8px;font-size:0.8rem">مکمل تفصیل کے لیے Registration Number لکھیں</div></div></div>';
+        html += '</div></div>';
       }
-      if (!html) html = '<div class="err">کوئی ریکارڈ نہیں ملا</div>';
+      if (!html) html = '<div class="err">Koi record nahi mila</div>';
       outEl.innerHTML = html;
     })
-    .catch(function (e) {
-      outEl.innerHTML = '<div class="err">Error: ' + esc(e.message) + '</div>';
-    })
-    .finally(function () {
-      document.getElementById("goBtn").disabled = false;
-    });
+    .catch(function(e){ outEl.innerHTML = '<div class="err">Error: ' + esc(e.message) + '</div>'; })
+    .finally(function(){ document.getElementById("goBtn").disabled = false; });
   }
 
-  function renderCitizen(data) {
-    var c = data.citizen;
-    var numbers = c.numbers || [];
-    var sims = c.simRecords || [];
+  function renderCitizen(data){
+    var c = data.citizen, numbers = c.numbers || [], sims = c.simRecords || [];
     var html = '<div class="result"><div class="result-top"><h3>' + esc(c.name || "Unknown") + '</h3></div><div class="result-body"><div class="grid">';
     html += '<div class="item"><label>CNIC</label><div class="v">' + val(c.cnic) + '</div></div>';
     html += '<div class="item"><label>Address</label><div class="v">' + val(c.address) + '</div></div>';
@@ -476,7 +412,7 @@
     return html + '</div></div>';
   }
 
-  function renderVehicle(v, index) {
+  function renderVehicle(v, index){
     var fields = [
       ["Registration No", v.registrationNumber], ["Owner Name", v.ownerName],
       ["Father Name", v.ownerFathersName], ["Owner CNIC", v.ownerCNIC],
@@ -495,32 +431,35 @@
     var items = "";
     for (var i = 0; i < fields.length; i++) {
       var label = fields[i][0], value = fields[i][1];
-      if (value !== null && value !== undefined && value !== "") {
+      if (value !== null && value !== undefined && value !== "")
         items += '<div class="item"><label>' + esc(label) + '</label><div class="v">' + esc(String(value)) + '</div></div>';
-      }
     }
-    return '<div class="result"><div class="result-top"><h3>Vehicle ' + esc(v.registrationNumber || ("#" + (index + 1))) +
+    return '<div class="result"><div class="result-top"><h3>Vehicle ' + esc(v.registrationNumber || ("#" + (index+1))) +
       '</h3></div><div class="result-body"><div class="grid">' + items + '</div></div></div>';
   }
 
-  document.getElementById("loginForm").addEventListener("submit", doLogin);
+  /* ===== EVENTS ===== */
+  document.getElementById("loginBtn").onclick = doLogin;
+  document.getElementById("loginPass").onkeydown = function(e){ if (e.key === "Enter") doLogin(); };
+  document.getElementById("loginUser").onkeydown = function(e){ if (e.key === "Enter") doLogin(); };
   document.getElementById("logoutBtn").onclick = doLogout;
   document.getElementById("adminBtn").onclick = showAdminView;
   document.getElementById("searchViewBtn").onclick = showSearchView;
   document.getElementById("addUserBtn").onclick = addUser;
-  document.getElementById("goBtn").onclick = function () { doSearch(document.getElementById("q").value); };
-  document.getElementById("testSim").onclick = function () {
+  document.getElementById("goBtn").onclick = function(){ doSearch(document.getElementById("q").value); };
+  document.getElementById("testSim").onclick = function(){
     document.getElementById("q").value = "3520212345671";
     doSearch("3520212345671");
   };
-  document.getElementById("testVeh").onclick = function () {
+  document.getElementById("testVeh").onclick = function(){
     document.getElementById("q").value = "SLK-0644";
     doSearch("SLK-0644");
   };
-  document.getElementById("q").onkeydown = function (e) {
+  document.getElementById("q").onkeydown = function(e){
     if (e.key === "Enter") doSearch(document.getElementById("q").value);
   };
 
+  /* ===== INIT ===== */
   var session = getSession();
   if (session) {
     showApp(session);
