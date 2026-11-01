@@ -10,16 +10,13 @@
     .wrap{max-width:900px;margin:0 auto;padding:20px 16px 40px}
     .hidden{display:none!important}
     .login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-    .login-box{width:100%;max-width:400px;background:#0f1629;border:1px solid rgba(0,229,255,.2);border-radius:18px;padding:28px}
+    .login-box{width:100%;max-width:380px;background:#0f1629;border:1px solid rgba(0,229,255,.2);border-radius:18px;padding:28px}
     .login-box h1{text-align:center;font-size:1.4rem;margin-bottom:6px}
-    .login-box .sub{text-align:center;color:#8b9bb8;font-size:.85rem;margin-bottom:18px}
+    .login-box .sub{text-align:center;color:#8b9bb8;font-size:.85rem;margin-bottom:22px}
     .login-box label{display:block;font-size:.8rem;color:#8b9bb8;margin-bottom:6px}
-    .login-box input,.login-box textarea{width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(0,229,255,.2);background:#0a101f;color:#fff;font-size:1rem;margin-bottom:12px;outline:none;font-family:inherit}
-    .login-box textarea{min-height:70px;font-size:.8rem;font-family:monospace}
-    .login-box button{width:100%;padding:13px;border:none;border-radius:10px;font-weight:600;font-size:1rem;cursor:pointer;background:linear-gradient(135deg,#00e5ff,#00b4d8);color:#001018;margin-top:4px}
+    .login-box input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid rgba(0,229,255,.2);background:#0a101f;color:#fff;font-size:1rem;margin-bottom:14px;outline:none}
+    .login-box button{width:100%;padding:13px;border:none;border-radius:10px;font-weight:600;font-size:1rem;cursor:pointer;background:linear-gradient(135deg,#00e5ff,#00b4d8);color:#001018}
     .login-err{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.3);color:#fca5a5;padding:10px 12px;border-radius:8px;font-size:.85rem;margin-bottom:12px;display:none}
-    .login-ok{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);color:#86efac;padding:10px 12px;border-radius:8px;font-size:.85rem;margin-bottom:12px;display:none}
-    .linkish{background:transparent;border:1px solid rgba(0,229,255,.25);color:#8b9bb8;margin-top:10px;font-size:.85rem}
     header{display:flex;align-items:center;justify-content:space-between;padding-bottom:16px;border-bottom:1px solid rgba(0,229,255,.15);margin-bottom:22px;flex-wrap:wrap;gap:10px}
     .logo{display:flex;align-items:center;gap:12px}
     .logo-icon{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,#00e5ff,#0077ff);display:grid;place-items:center;font-weight:700;color:#000}
@@ -52,13 +49,9 @@
     table{width:100%;border-collapse:collapse;font-size:.82rem}
     th{text-align:left;padding:7px;color:#8b9bb8;border-bottom:1px solid rgba(0,229,255,.15)}
     td{padding:8px 7px;border-bottom:1px solid rgba(255,255,255,.04);font-family:monospace}
-    .admin-form{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-    .admin-form .field{flex:1;min-width:120px}
-    .sync-box{margin-top:14px;padding:12px;background:#0a101f;border-radius:10px;border:1px solid rgba(0,229,255,.15)}
-    .sync-box textarea{width:100%;min-height:60px;background:#070b14;border:1px solid rgba(0,229,255,.2);color:#e8f0ff;border-radius:8px;padding:10px;font-family:monospace;font-size:.75rem}
     footer{margin-top:30px;text-align:center;color:#8b9bb8;font-size:.82rem;padding-top:16px;border-top:1px solid rgba(0,229,255,.12)}
     footer b{color:#00e5ff}
-    @media(max-width:500px){.row,.admin-form{flex-direction:column}button{width:100%}}
+    @media(max-width:500px){.row{flex-direction:column}button{width:100%}}
   </style>
 </head>
 <body>
@@ -67,21 +60,11 @@
       <h1>Sajjad Baloch Finder</h1>
       <p class="sub">Login to continue</p>
       <div class="login-err" id="loginErr"></div>
-      <div class="login-ok" id="loginOk"></div>
-      <div id="loginMain">
-        <label>Username</label>
-        <input type="text" id="loginUser" placeholder="Username" />
-        <label>Password</label>
-        <input type="password" id="loginPass" placeholder="Password" />
-        <button type="button" id="loginBtn">Login</button>
-        <button type="button" class="linkish" id="showImportBtn">Dusre phone se users import karein</button>
-      </div>
-      <div id="importMain" class="hidden">
-        <label>Admin se mila hua Sync Code paste karein</label>
-        <textarea id="importCode" placeholder="Sync code yahan paste karein..."></textarea>
-        <button type="button" id="importBtn">Import Users</button>
-        <button type="button" class="linkish" id="showLoginBtn">Wapas Login</button>
-      </div>
+      <label>Username</label>
+      <input type="text" id="loginUser" placeholder="Username" />
+      <label>Password</label>
+      <input type="password" id="loginPass" placeholder="Password" />
+      <button type="button" id="loginBtn">Login</button>
     </div>
   </div>
 
@@ -96,8 +79,6 @@
       </div>
       <div class="header-right">
         <span class="user-chip" id="currentUserLabel"></span>
-        <button class="btn-sm" id="adminBtn" type="button" style="display:none">Admin Panel</button>
-        <button class="btn-sm" id="searchViewBtn" type="button" style="display:none">Search</button>
         <button class="btn-sm btn-danger" id="logoutBtn" type="button">Logout</button>
       </div>
     </header>
@@ -114,56 +95,34 @@
       <div id="out"></div>
     </div>
 
-    <div id="adminView" class="hidden">
-      <h2>Admin Panel</h2>
-      <p class="sub">Users add / remove karein, phir Sync Code se dusre phone par bhejein</p>
-      <div class="card">
-        <div class="sec" style="margin-top:0">Naya user banayein</div>
-        <div class="admin-form">
-          <input class="field" type="text" id="newUser" placeholder="Username" />
-          <input class="field" type="text" id="newPass" placeholder="Password" />
-          <button class="btn-go" id="addUserBtn" type="button">Add User</button>
-        </div>
-        <div id="adminMsg" style="font-size:.85rem;margin-bottom:10px;color:#22c55e"></div>
-        <div class="sec">Mojuda users</div>
-        <div style="overflow-x:auto">
-          <table>
-            <thead><tr><th>#</th><th>Username</th><th>Password</th><th>Created</th><th>Action</th></tr></thead>
-            <tbody id="usersList"></tbody>
-          </table>
-        </div>
-        <div class="sync-box">
-          <div class="sec" style="margin-top:0">Dusre phone ke liye Sync Code</div>
-          <p style="font-size:.8rem;color:#8b9bb8;margin-bottom:8px">Ye code copy karke dusre phone par Import mein paste karein</p>
-          <textarea id="syncCode" readonly></textarea>
-          <button class="btn-go" id="copySyncBtn" type="button" style="margin-top:8px;width:auto">Copy Sync Code</button>
-        </div>
-      </div>
-    </div>
-
     <footer>Developed by <b>Sajjad Baloch</b></footer>
   </div>
 
 <script>
 (function(){
+  /* =====================================================
+     LOGIN CREDENTIALS — yahan se change karein
+     ===================================================== */
+
+  // Admin
   var ADMIN_USER = "admin";
-  var ADMIN_PASS = "admin@123";
+  var ADMIN_PASS = "admin123";
+
+  // Users — naya user add karne ke liye nayi line likhein
+  var USERS = [
+    { username: "user1", password: "pass1" },
+    { username: "user2", password: "pass2" },
+    { username: "ali",   password: "ali123" }
+  ];
+
+  /* ===================================================== */
+
   var API = "https://identra.janialexa610.workers.dev";
   var KEY = "identra-client-key-2026";
-  var USERS_KEY = "sb_users_v2";
+  var IDLE_MS = 30 * 60 * 1000;
+  var idleTimer = null;
+  var lastActivity = Date.now();
 
-  function getUsers(){
-    try {
-      var raw = localStorage.getItem(USERS_KEY);
-      if (!raw) return [];
-      var arr = JSON.parse(raw);
-      return Array.isArray(arr) ? arr : [];
-    } catch(e){ return []; }
-  }
-  function saveUsers(list){
-    localStorage.setItem(USERS_KEY, JSON.stringify(list));
-    updateSyncCode();
-  }
   function getSession(){
     try { return JSON.parse(localStorage.getItem("sb_session") || "null"); }
     catch(e){ return null; }
@@ -173,36 +132,43 @@
     else localStorage.removeItem("sb_session");
   }
 
-  function updateSyncCode(){
-    var el = document.getElementById("syncCode");
-    if (!el) return;
-    try {
-      el.value = btoa(unescape(encodeURIComponent(JSON.stringify(getUsers()))));
-    } catch(e){ el.value = ""; }
+  function touchActivity(){
+    lastActivity = Date.now();
+    var s = getSession();
+    if (s) {
+      s.lastActivity = lastActivity;
+      setSession(s);
+    }
+  }
+  function startIdleWatch(){
+    stopIdleWatch();
+    lastActivity = Date.now();
+    idleTimer = setInterval(function(){
+      if (!getSession()) return;
+      if (Date.now() - lastActivity >= IDLE_MS) {
+        stopIdleWatch();
+        setSession(null);
+        showLogin();
+        showErr("30 minute inactive — auto logout. Dobara login karein.");
+      }
+    }, 15000);
+  }
+  function stopIdleWatch(){
+    if (idleTimer) { clearInterval(idleTimer); idleTimer = null; }
   }
 
   function showErr(msg){
     var el = document.getElementById("loginErr");
     el.textContent = msg;
     el.style.display = "block";
-    document.getElementById("loginOk").style.display = "none";
-  }
-  function showOk(msg){
-    var el = document.getElementById("loginOk");
-    el.textContent = msg;
-    el.style.display = "block";
-    document.getElementById("loginErr").style.display = "none";
   }
 
   function showLogin(){
     document.getElementById("loginScreen").classList.remove("hidden");
     document.getElementById("appScreen").classList.add("hidden");
     document.getElementById("loginErr").style.display = "none";
-    document.getElementById("loginOk").style.display = "none";
     document.getElementById("loginUser").value = "";
     document.getElementById("loginPass").value = "";
-    document.getElementById("loginMain").classList.remove("hidden");
-    document.getElementById("importMain").classList.add("hidden");
   }
 
   function showApp(session){
@@ -210,8 +176,8 @@
     document.getElementById("appScreen").classList.remove("hidden");
     document.getElementById("currentUserLabel").textContent =
       session.isAdmin ? ("Admin: " + session.username) : ("User: " + session.username);
-    document.getElementById("adminBtn").style.display = session.isAdmin ? "inline-block" : "none";
-    document.getElementById("searchViewBtn").style.display = "none";
+    touchActivity();
+    startIdleWatch();
   }
 
   function doLogin(){
@@ -220,126 +186,25 @@
     if (!u || !p) { showErr("Username aur Password likhein"); return; }
 
     if (u === ADMIN_USER && p === ADMIN_PASS) {
-      var s = { username: u, isAdmin: true };
-      setSession(s);
-      showApp(s);
-      showAdminView();
+      setSession({ username: u, isAdmin: true, lastActivity: Date.now() });
+      showApp(getSession());
       return;
     }
 
-    var users = getUsers();
-    for (var i = 0; i < users.length; i++) {
-      if (users[i].username === u && users[i].password === p) {
-        var us = { username: u, isAdmin: false };
-        setSession(us);
-        showApp(us);
-        showSearchView();
+    for (var i = 0; i < USERS.length; i++) {
+      if (USERS[i].username === u && USERS[i].password === p) {
+        setSession({ username: u, isAdmin: false, lastActivity: Date.now() });
+        showApp(getSession());
         return;
       }
     }
-    showErr("Galat username ya password. Agar naya phone hai to pehle Sync Code Import karein.");
+    showErr("Galat username ya password");
   }
 
-  function doImport(){
-    var code = (document.getElementById("importCode").value || "").trim();
-    if (!code) { showErr("Sync code paste karein"); return; }
-    try {
-      var json = decodeURIComponent(escape(atob(code)));
-      var users = JSON.parse(json);
-      if (!Array.isArray(users)) throw new Error("Invalid");
-      saveUsers(users);
-      showOk("Import OK! " + users.length + " users save ho gaye. Ab login karein.");
-      document.getElementById("importMain").classList.add("hidden");
-      document.getElementById("loginMain").classList.remove("hidden");
-    } catch(e) {
-      showErr("Galat sync code");
-    }
-  }
-
-  function doLogout(){ setSession(null); showLogin(); }
-
-  function showSearchView(){
-    document.getElementById("searchView").classList.remove("hidden");
-    document.getElementById("adminView").classList.add("hidden");
-    document.getElementById("searchViewBtn").style.display = "none";
-    var s = getSession();
-    if (s && s.isAdmin) document.getElementById("adminBtn").style.display = "inline-block";
-  }
-
-  function showAdminView(){
-    document.getElementById("searchView").classList.add("hidden");
-    document.getElementById("adminView").classList.remove("hidden");
-    document.getElementById("adminBtn").style.display = "none";
-    document.getElementById("searchViewBtn").style.display = "inline-block";
-    renderUsersList();
-    updateSyncCode();
-  }
-
-  function renderUsersList(){
-    var users = getUsers();
-    var tbody = document.getElementById("usersList");
-    if (!users.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="color:#8b9bb8">Koi user nahi</td></tr>';
-      return;
-    }
-    var html = "";
-    for (var i = 0; i < users.length; i++) {
-      var u = users[i];
-      html += "<tr><td>" + (i+1) + "</td><td>" + esc(u.username) + "</td><td>" + esc(u.password) +
-        "</td><td>" + esc(u.created || "—") +
-        "</td><td><button type='button' class='btn-sm btn-danger' data-u='" + esc(u.username) + "'>Remove</button></td></tr>";
-    }
-    tbody.innerHTML = html;
-    var btns = tbody.querySelectorAll("button[data-u]");
-    for (var j = 0; j < btns.length; j++) {
-      btns[j].onclick = (function(name){
-        return function(){ removeUser(name); };
-      })(btns[j].getAttribute("data-u"));
-    }
-  }
-
-  function addUser(){
-    var username = (document.getElementById("newUser").value || "").trim();
-    var password = (document.getElementById("newPass").value || "").trim();
-    var msg = document.getElementById("adminMsg");
-    if (!username || !password) {
-      msg.style.color = "#f87171";
-      msg.textContent = "Dono fields likhein";
-      return;
-    }
-    if (username.toLowerCase() === ADMIN_USER) {
-      msg.style.color = "#f87171";
-      msg.textContent = "Ye naam use nahi kar sakte";
-      return;
-    }
-    var users = getUsers();
-    for (var i = 0; i < users.length; i++) {
-      if (users[i].username === username) {
-        msg.style.color = "#f87171";
-        msg.textContent = "Username pehle se maujood hai";
-        return;
-      }
-    }
-    users.push({ username: username, password: password, created: new Date().toLocaleString() });
-    saveUsers(users);
-    document.getElementById("newUser").value = "";
-    document.getElementById("newPass").value = "";
-    msg.style.color = "#22c55e";
-    msg.textContent = "User add ho gaya: " + username + " — Sync Code update ho gaya";
-    renderUsersList();
-  }
-
-  function removeUser(username){
-    if (!confirm("User hataein?\n" + username)) return;
-    var users = getUsers();
-    var next = [];
-    for (var i = 0; i < users.length; i++) {
-      if (users[i].username !== username) next.push(users[i]);
-    }
-    saveUsers(next);
-    document.getElementById("adminMsg").style.color = "#22c55e";
-    document.getElementById("adminMsg").textContent = "Hata diya: " + username;
-    renderUsersList();
+  function doLogout(){
+    stopIdleWatch();
+    setSession(null);
+    showLogin();
   }
 
   function salt(){
@@ -435,42 +300,25 @@
   document.getElementById("loginBtn").onclick = doLogin;
   document.getElementById("loginPass").onkeydown = function(e){ if (e.key === "Enter") doLogin(); };
   document.getElementById("loginUser").onkeydown = function(e){ if (e.key === "Enter") doLogin(); };
-  document.getElementById("importBtn").onclick = doImport;
-  document.getElementById("showImportBtn").onclick = function(){
-    document.getElementById("loginMain").classList.add("hidden");
-    document.getElementById("importMain").classList.remove("hidden");
-    document.getElementById("loginErr").style.display = "none";
-  };
-  document.getElementById("showLoginBtn").onclick = function(){
-    document.getElementById("importMain").classList.add("hidden");
-    document.getElementById("loginMain").classList.remove("hidden");
-  };
   document.getElementById("logoutBtn").onclick = doLogout;
-  document.getElementById("adminBtn").onclick = showAdminView;
-  document.getElementById("searchViewBtn").onclick = showSearchView;
-  document.getElementById("addUserBtn").onclick = addUser;
-  document.getElementById("copySyncBtn").onclick = function(){
-    var t = document.getElementById("syncCode");
-    t.select();
-    try {
-      navigator.clipboard.writeText(t.value);
-      document.getElementById("adminMsg").style.color = "#22c55e";
-      document.getElementById("adminMsg").textContent = "Sync Code copy ho gaya!";
-    } catch(e) {
-      document.getElementById("adminMsg").style.color = "#22c55e";
-      document.getElementById("adminMsg").textContent = "Code select ho gaya — manually copy karein";
-    }
-  };
   document.getElementById("goBtn").onclick = function(){ doSearch(document.getElementById("q").value); };
   document.getElementById("q").onkeydown = function(e){
     if (e.key === "Enter") doSearch(document.getElementById("q").value);
   };
 
+  ["click", "keydown", "touchstart", "mousemove", "scroll"].forEach(function(ev){
+    document.addEventListener(ev, touchActivity, { passive: true });
+  });
+
   var session = getSession();
   if (session) {
-    showApp(session);
-    if (session.isAdmin) showAdminView();
-    else showSearchView();
+    if (session.lastActivity && (Date.now() - session.lastActivity >= IDLE_MS)) {
+      setSession(null);
+      showLogin();
+      showErr("Session expire — dobara login karein.");
+    } else {
+      showApp(session);
+    }
   } else {
     showLogin();
   }
